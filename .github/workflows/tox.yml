@@ -1,3 +1,9 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
 uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@v1
 with:
   envs: |
