@@ -1,0 +1,12 @@
+uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@v1
+with:
+  envs: |
+    - linux: py37
+    - linux: py38
+    - linux: py39
+    - macos: py37
+    - macos: py38
+    - macos: py39
+    - windows: py37
+    - windows: py38
+    - windows: py39
