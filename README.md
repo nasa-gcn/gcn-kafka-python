@@ -31,6 +31,6 @@ Subscribe to topics and receive alerts:
 ```pycon
 >>> consumer.subscribe(['gcn.classic.text.FERMI_GBM_FIN_POS', 'gcn.classic.text.LVC_INITIAL'])
 >>> while True:
-... for message in consumer.consume():
-...     print(message.value())
+...     for message in consumer.consume():
+...         print(message.value())
 ```
