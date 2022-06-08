@@ -4,3 +4,4 @@ __pycache__
 .vscode
 build
 dist
+_version.py
