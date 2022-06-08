@@ -1,6 +1,10 @@
 # SPDX-License-Identifier: CC0-1.0
 
-import typing
+from typing import Any, Mapping, Optional, Union
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
 from uuid import uuid4
 
 import certifi
@@ -52,14 +56,14 @@ def get_config(mode, config, **kwargs):
 class Producer(confluent_kafka.Producer):
     def __init__(
         self,
-        config: typing.Optional[typing.Mapping[str, typing.Any]] = None,
-        client_id: typing.Optional[str] = None,
-        client_secret: typing.Optional[str] = None,
-        domain: typing.Optional[
-            typing.Union[
-                typing.Literal["gcn.nasa.gov"],
-                typing.Literal["test.gcn.nasa.gov"],
-                typing.Literal["dev.gcn.nasa.gov"],
+        config: Optional[Mapping[str, Any]] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
+        domain: Optional[
+            Union[
+                Literal["gcn.nasa.gov"],
+                Literal["test.gcn.nasa.gov"],
+                Literal["dev.gcn.nasa.gov"],
             ]
         ] = 'gcn.nasa.gov',
         **kwargs,
@@ -82,14 +86,14 @@ class Producer(confluent_kafka.Producer):
 class Consumer(confluent_kafka.Consumer):
     def __init__(
         self,
-        config: typing.Optional[typing.Mapping[str, typing.Any]] = None,
-        client_id: typing.Optional[str] = None,
-        client_secret: typing.Optional[str] = None,
-        domain: typing.Optional[
-            typing.Union[
-                typing.Literal["gcn.nasa.gov"],
-                typing.Literal["test.gcn.nasa.gov"],
-                typing.Literal["dev.gcn.nasa.gov"],
+        config: Optional[Mapping[str, Any]] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
+        domain: Optional[
+            Union[
+                Literal["gcn.nasa.gov"],
+                Literal["test.gcn.nasa.gov"],
+                Literal["dev.gcn.nasa.gov"],
             ]
         ] = 'gcn.nasa.gov',
         **kwargs,
