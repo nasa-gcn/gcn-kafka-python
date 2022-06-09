@@ -1,3 +1,5 @@
+[![PyPI](https://img.shields.io/pypi/v/gcn-kafka)](https://pypi.org/project/gcn-kafka/)
+
 # GCN Kafka Client for Python
 
 This is the official Python client for the [General Coordinates Network (GCN)](https://gcn.nasa.gov). It is a very lightweight wrapper around [confluent-kafka-python](https://docs.confluent.io/platform/current/clients/confluent-kafka-python/html/index.html).
