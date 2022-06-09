@@ -12,25 +12,47 @@ pip install gcn-kafka
 
 ## To Use
 
-Create a consumer:
+Create a consumer.
 
-```pycon
->>> from gcn_kafka import Consumer
->>> consumer = Consumer(client_id='fill me in', client_secret='fill me in')
+```python
+from gcn_kafka import Consumer
+consumer = Consumer(client_id='fill me in',
+                    client_secret='fill me in')
 ```
 
 List all topics:
 
-```pycon
->>> print(consumer.list_topics().topics)
-{'gcn.classic.text.CALET_GBM_FLT_LC': TopicMetadata(gcn.classic.text.CALET_GBM_FLT_LC, 1 partitions), 'gcn.classic.voevent.FERMI_GBM_SUBTHRESH': TopicMetadata(gcn.classic.voevent.FERMI_GBM_SUBTHRESH, 1 partitions), ...}
+```python
+print(consumer.list_topics().topics)
 ```
 
 Subscribe to topics and receive alerts:
 
-```pycon
->>> consumer.subscribe(['gcn.classic.text.FERMI_GBM_FIN_POS', 'gcn.classic.text.LVC_INITIAL'])
->>> while True:
-...     for message in consumer.consume():
-...         print(message.value())
+```python
+consumer.subscribe(['gcn.classic.text.FERMI_GBM_FIN_POS',
+                    'gcn.classic.text.LVC_INITIAL'])
+while True:
+    for message in consumer.consume():
+        print(message.value())
+```
+
+## Testing and Development Kafka Clusters
+
+GCN has three Kafka clusters: production, testing, and an internal development deployment. Use the optional ``domain`` keyword argument to select which broker to connect to.
+
+```python
+# Production (default)
+consumer = Consumer(client_id='fill me in',
+                    client_secret='fill me in',
+                    domain='gcn.nasa.gov')
+
+# Testing
+consumer = Consumer(client_id='fill me in',
+                    client_secret='fill me in',
+                    domain='test.gcn.nasa.gov')
+
+# Development (internal)
+consumer = Consumer(client_id='fill me in',
+                    client_secret='fill me in',
+                    domain='dev.gcn.nasa.gov')
 ```
