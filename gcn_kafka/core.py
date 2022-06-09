@@ -4,6 +4,7 @@ from typing import Any, Mapping, Optional, Union
 try:
     from typing import Literal
 except ImportError:
+    # FIXME: Remove once we drop support for Python 3.7.
     from typing_extensions import Literal
 from uuid import uuid4
 
