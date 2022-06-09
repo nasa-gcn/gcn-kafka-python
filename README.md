@@ -10,7 +10,7 @@ Run this command to install with [pip](https://pip.pypa.io/):
 pip install gcn-kafka
 ```
 
-## To use
+## To Use
 
 Create a consumer:
 
