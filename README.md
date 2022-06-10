@@ -12,6 +12,12 @@ Run this command to install with [pip](https://pip.pypa.io/):
 pip install gcn-kafka
 ```
 
+or this command to install with with [conda](https://docs.conda.io/):
+
+```
+conda install -c conda-forge gcn-kafka
+```
+
 ## To Use
 
 Create a consumer.
