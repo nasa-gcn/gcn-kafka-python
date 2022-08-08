@@ -64,3 +64,90 @@ consumer = Consumer(client_id='fill me in',
                     client_secret='fill me in',
                     domain='dev.gcn.nasa.gov')
 ```
+
+## FAQ
+
+**How can I keep track of the last read message when restarting a client?**
+
+A key feature of kafka consumer clients is the ability to perform persistent tracking of which messages have been read. This allows clients to recover missed messages after a   restart by beginning at the earliest unread message rather than the next available message from the stream. In order to enable this feature, you will need to set a client Group ID using the configuration dictionary argument for the Consumer class as well as change the auto offset reset option to the ‘earliest’ setting. Once this is done, every new client with the given Group ID will begin reading the specified topic at the earliest unread message. When doing this, it is recommended to turn OFF the auto commit feature because it can lose track of the last read message if the client crashes before the auto commit interval (5 seconds by default) occurs. Manually committing messages (i.e. storing the state of the last read message) once they are read is the most robust method for tracking the last read message.
+
+Example code: 
+```python3
+from gcn_kafka import Consumer
+
+config = {'group.id': 'my group name',
+          'auto.offset.reset': 'earliest',
+          'enable.auto.commit': False}
+
+consumer = Consumer(config=config,
+                    client_id='fill me in',
+                    client_secret='fill me in',
+                    domain='gcn.nasa.gov')
+
+topics = ['gcn.classic.voevent.FERMI_GBM_SUBTHRESH']
+consumer.subscribe(topics)
+
+while True:
+    for message in consumer.consume():
+        print(message.value())
+        consumer.commit(message)
+```
+
+**How can I read messages beginning at the earliest available messages for a given stream?**
+
+You can begin reading a given topic stream from the earliest message that is present in the stream buffer by setting the Group ID to an empty string and applying the ‘earliest’ setting for the auto offset reset option in the configuration dictionary argument for the Consumer class. This feature allows the user to scan for older messages for testing purposes or to recover messages that may have been missed due to a crash or network outage. Just keep in mind that the stream buffers are finite in size. They currently hold messages from the past few days.
+
+Example code:
+```python3
+from gcn_kafka import Consumer
+
+config = {'group.id': '',
+          'auto.offset.reset': 'earliest'}
+
+consumer = Consumer(config=config,
+                    client_id='fill me in',
+                    client_secret='fill me in',
+                    domain='gcn.nasa.gov')
+
+topics = ['gcn.classic.voevent.INTEGRAL_SPIACS']
+consumer.subscribe(topics)
+
+while True:
+    for message in consumer.consume():
+        print(message.value())
+```
+
+Note: Adding a timeout argument, given as an integer number of seconds, to consume() will allow the program to exit quickly once it has reached the end of the existing message buffer. This is useful for users who just want to recover an older message from the stream.
+
+**How can I search for messages occurring within a given date range?**
+
+To search for messages in a given date range, set the Group ID to an empty string and the auto offset reset option to the ‘earliest’ setting in the configuration dictionary argument for the Consumer class. Then use the timestamp member function to select for messages occurring within a given date range. When doing so, keep in mind that the stream buffers are finite in size. It is not possible to recover messages prior to the start of the stream buffer. The GCN stream buffers are currently set to hold messages from the past few days.
+
+Example code:
+```python3
+import datetime
+from gcn_kafka import Consumer
+
+config = {'group.id': '',
+          'auto.offset.reset': 'earliest'}
+
+consumer = Consumer(config=config,
+                    client_id='fill me in',
+                    client_secret='fill me in',
+                    domain='gcn.nasa.gov')
+
+topics = ['gcn.classic.voevent.INTEGRAL_SPIACS']
+consumer.subscribe(topics)
+
+# search for messages occurring 3 days ago
+date1 = datetime.datetime.now() - datetime.timedelta(days=3)
+date2 = date1 + datetime.timedelta(days=1)
+
+while True:
+    message = consumer.poll()
+    date = datetime.datetime.fromtimestamp(message.timestamp()[1]/1000.)
+    if date1 < date:
+        if date > date2:
+            break
+        print(message.value())
+```
