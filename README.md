@@ -121,7 +121,7 @@ Note: Adding a timeout argument, given as an integer number of seconds, to consu
 
 **How can I search for messages occurring within a given date range?**
 
-To search for messages in a given date range, you can use the offsets_for_times() function from the Consumer class to begin reading the stream after a specific time. You can then use the timestamp member function to stop reading messages after reaching the end of the desired date range. When doing so, keep in mind that the stream buffers are finite in size. It is not possible to recover messages prior to the start of the stream buffer. The GCN stream buffers are currently set to hold messages from the past few days.
+To search for messages in a given date range, you can use the offsets_for_times() function from the Consumer class to get the message offsets for the desired date range. You can then assign the starting offset to the Consumer and read the desired number of messages. When doing so, keep in mind that the stream buffers are finite in size. It is not possible to recover messages prior to the start of the stream buffer. The GCN stream buffers are currently set to hold messages from the past few days.
 
 Example code:
 ```python3
@@ -137,13 +137,13 @@ consumer = Consumer(client_id='fill me in',
 timestamp1 = int((datetime.datetime.now() - datetime.timedelta(days=3)).timestamp() * 1000)
 timestamp2 = timestamp1 + 86400000 # +1 day
 
-topic = consumer.offsets_for_times(
-    [TopicPartition('gcn.classic.voevent.INTEGRAL_SPIACS', 0, timestamp1)])
-consumer.assign(topic)
+topic = 'gcn.classic.voevent.INTEGRAL_SPIACS'
+start = consumer.offsets_for_times(
+    [TopicPartition(topic, 0, timestamp1)])
+end = consumer.offsets_for_times(
+    [TopicPartition(topic, 0, timestamp2)])
 
-while True:
-    message = consumer.poll()
-    if message.timestamp()[1] > timestamp2:
-        break
-    print(message.value())
+consumer.assign(start)
+for message in consumer.consume(end[0].offset - start[0].offset):
+    print(message)
 ```
