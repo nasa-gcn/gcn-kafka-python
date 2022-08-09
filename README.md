@@ -121,33 +121,29 @@ Note: Adding a timeout argument, given as an integer number of seconds, to consu
 
 **How can I search for messages occurring within a given date range?**
 
-To search for messages in a given date range, set the Group ID to an empty string and the auto offset reset option to the ‘earliest’ setting in the configuration dictionary argument for the Consumer class. Then use the timestamp member function to select for messages occurring within a given date range. When doing so, keep in mind that the stream buffers are finite in size. It is not possible to recover messages prior to the start of the stream buffer. The GCN stream buffers are currently set to hold messages from the past few days.
+To search for messages in a given date range, you can use the offsets_for_times() function from the Consumer class to begin reading the stream after a specific time. You can then use the timestamp member function to stop reading messages after reaching the end of the desired date range. When doing so, keep in mind that the stream buffers are finite in size. It is not possible to recover messages prior to the start of the stream buffer. The GCN stream buffers are currently set to hold messages from the past few days.
 
 Example code:
 ```python3
 import datetime
 from gcn_kafka import Consumer
+from confluent_kafka import TopicPartition
 
-config = {'group.id': '',
-          'auto.offset.reset': 'earliest'}
-
-consumer = Consumer(config=config,
-                    client_id='fill me in',
+consumer = Consumer(client_id='fill me in',
                     client_secret='fill me in',
                     domain='gcn.nasa.gov')
 
-topics = ['gcn.classic.voevent.INTEGRAL_SPIACS']
-consumer.subscribe(topics)
+# get messages occurring 3 days ago
+timestamp1 = int((datetime.datetime.now() - datetime.timedelta(days=3)).timestamp() * 1000)
+timestamp2 = timestamp1 + 86400000 # +1 day
 
-# search for messages occurring 3 days ago
-date1 = datetime.datetime.now() - datetime.timedelta(days=3)
-date2 = date1 + datetime.timedelta(days=1)
+topic = consumer.offsets_for_times(
+    [TopicPartition('gcn.classic.voevent.INTEGRAL_SPIACS', 0, timestamp1)])
+consumer.assign(topic)
 
 while True:
     message = consumer.poll()
-    date = datetime.datetime.fromtimestamp(message.timestamp()[1]/1000.)
-    if date1 < date:
-        if date > date2:
-            break
-        print(message.value())
+    if message.timestamp()[1] > timestamp2:
+        break
+    print(message.value())
 ```
