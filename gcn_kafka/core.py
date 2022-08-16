@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
+from __future__ import annotations
+import re
 from typing import Any, Mapping, Optional, Union
 try:
     from typing import Literal
@@ -51,6 +53,32 @@ def get_config(mode, config, **kwargs):
         config["group.id"] = str(uuid4())
 
     set_oauth_cb(config)
+    return config
+
+env_key_splitter = re.compile(r'_+')
+replacement_dict = {'_': '.', '__': '-', '___': '_'}
+
+def replacement(match: re.Match) -> str:
+    text = match[0]
+    return replacement_dict.get(text) or text
+
+
+def config_from_env(env: dict[str, str], prefix: str = 'KAFKA_') -> dict[str, str]:
+    """Construct a Kafka client configuration dictionary from env variables.
+    This uses the same rules as
+    https://docs.confluent.io/platform/current/installation/docker/config-reference.html
+    to convert from configuration variables to environment variable names:
+    * Start the environment variable name with the given prefix.
+    * Convert to upper-case.
+    * Replace periods (`.`) with single underscores (`_`).
+    * Replace dashes (`-`) with double underscores (`__`).
+    * Replace underscores (`-`) with triple underscores (`___`).
+    """
+    config = {}
+    for key, value in env.items():
+        if key.startswith(prefix):
+            key = env_key_splitter.sub(replacement, key.removeprefix(prefix))
+            config[key.lower()] = value
     return config
 
 
