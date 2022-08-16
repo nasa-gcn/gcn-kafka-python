@@ -80,7 +80,6 @@ def kafka_config_from_env(env: dict[str, str], prefix: str) -> dict[str, str]:
             config[key.lower()] = value
     return config
 
-config = kafka_config_from_env(os.environ, 'KAFKA_')
 
 class Producer(confluent_kafka.Producer):
     def __init__(
