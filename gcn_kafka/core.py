@@ -62,7 +62,8 @@ def replacement(match: re.Match) -> str:
     text = match[0]
     return replacement_dict.get(text) or text
 
-def kafka_config_from_env(env: dict[str, str], prefix: str) -> dict[str, str]:
+
+def config_from_env(env: dict[str, str], prefix: str = 'KAFKA_') -> dict[str, str]:
     """Construct a Kafka client configuration dictionary from env variables.
     This uses the same rules as
     https://docs.confluent.io/platform/current/installation/docker/config-reference.html
