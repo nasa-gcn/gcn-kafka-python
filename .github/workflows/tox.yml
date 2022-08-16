@@ -12,9 +12,12 @@ jobs:
         - linux: py37
         - linux: py38
         - linux: py39
+        - linux: py310
         - macos: py37
         - macos: py38
         - macos: py39
+        - macos: py310
         - windows: py37
         - windows: py38
         - windows: py39
+        - windows: py310
