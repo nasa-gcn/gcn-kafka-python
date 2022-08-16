@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: CC0-1.0
 
+from __future__ import annotations
 import re
 from typing import Any, Mapping, Optional, Union
 try:
@@ -8,7 +9,6 @@ except ImportError:
     # FIXME: Remove once we drop support for Python 3.7.
     from typing_extensions import Literal
 from uuid import uuid4
-from __future__ import annotations
 
 import certifi
 import confluent_kafka
