@@ -1,4 +1,5 @@
 [![PyPI](https://img.shields.io/pypi/v/gcn-kafka)](https://pypi.org/project/gcn-kafka/)
+[![codecov](https://codecov.io/gh/nasa-gcn/gcn-kafka-python/branch/main/graph/badge.svg?token=KSFUD0LETW)](https://codecov.io/gh/nasa-gcn/gcn-kafka-python)
 
 # GCN Kafka Client for Python
 
