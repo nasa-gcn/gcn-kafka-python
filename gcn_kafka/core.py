@@ -79,8 +79,8 @@ class Producer(confluent_kafka.Producer):
                 **kwargs,
             )
         )
-        # Workaround for https://github.com/edenhill/librdkafka/issues/3263.
-        # FIXME: Remove once confluent-kafka-python 1.9.0 has been released.
+        # Workaround for https://github.com/edenhill/librdkafka/issues/3871.
+        # FIXME: Remove once fixed upstream, or on removal of oauth_cb.
         self.poll(0)
 
 
