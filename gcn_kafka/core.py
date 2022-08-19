@@ -16,7 +16,7 @@ from .oidc import set_oauth_cb
 
 def get_config(mode, config, **kwargs):
     # Merge configuration from user.
-    config = {**(config or {}), **kwargs}
+    config = update_config(config, kwargs)
 
     # SSL configuration.
     if config.setdefault("security.protocol", "sasl_ssl") == "sasl_ssl":
@@ -52,6 +52,12 @@ def get_config(mode, config, **kwargs):
 
     set_oauth_cb(config)
     return config
+
+
+def update_config(config, **kwargs):
+    result = dict(config)
+    result.update({k: v for k, v in kwargs.items() if v is not None})
+    return result
 
 
 class Producer(confluent_kafka.Producer):
