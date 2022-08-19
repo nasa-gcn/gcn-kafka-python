@@ -16,6 +16,7 @@ def test_update_config_no_overwrite():
 
     assert newConfig == config
 
+
 def test_update_config_with_overwrite():
     config = {
         'client_id':'qwertyuiopasdfghjklzxcvbnm', 
