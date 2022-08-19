@@ -56,7 +56,7 @@ def get_config(mode, config, **kwargs):
 
 def update_config(config, **kwargs):
     result = dict(config)
-    config.update({k: v for k, v in kwargs.items() if v is not None})
+    result.update({k: v for k, v in kwargs.items() if v is not None})
     return result
 
 
