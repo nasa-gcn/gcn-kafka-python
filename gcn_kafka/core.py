@@ -16,7 +16,8 @@ from .oidc import set_oauth_cb
 
 def get_config(mode, config, **kwargs):
     # Merge configuration from user.
-    config.update({k:v for (k,v) in kwargs.items() if v})
+    config = dict(config)
+    config.update({k: v for k, v in kwargs.items() if v is not None})
 
     # SSL configuration.
     if config.setdefault("security.protocol", "sasl_ssl") == "sasl_ssl":
