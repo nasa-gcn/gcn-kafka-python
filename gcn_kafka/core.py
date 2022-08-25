@@ -27,12 +27,11 @@ def get_config(mode, config, **kwargs):
             # certificate bundle from Certifi.
             config["ssl.ca.location"] = certifi.where()
 
-    domain = config.pop("domain", None)
+    domain = config.pop("domain", "gcn.nasa.gov")
     client_id = config.pop("client_id", None)
     client_secret = config.pop("client_secret", None)
 
-    if domain:
-        config.setdefault("bootstrap.servers", f"kafka.{domain}")
+    config.setdefault("bootstrap.servers", f"kafka.{domain}")
 
     if client_id:
         # Configure authentication and authorization using OpenID Connect.
@@ -41,11 +40,9 @@ def get_config(mode, config, **kwargs):
         config.setdefault("sasl.oauthbearer.client.id", client_id)
         if client_secret:
             config.setdefault("sasl.oauthbearer.client.secret", client_secret)
-        if domain:
-            config.setdefault(
-                "sasl.oauthbearer.token.endpoint.url",
-                f"https://auth.{domain}/oauth2/token",
-            )
+        config.setdefault(
+            "sasl.oauthbearer.token.endpoint.url",
+            f"https://auth.{domain}/oauth2/token")
 
     if mode == "consumer" and not config.get("group.id"):
         config["group.id"] = str(uuid4())
@@ -55,7 +52,7 @@ def get_config(mode, config, **kwargs):
 
 
 def update_config(config, **kwargs):
-    result = dict(config)
+    result = dict(config or {})
     result.update({k: v for k, v in kwargs.items() if v is not None})
     return result
 
@@ -72,7 +69,7 @@ class Producer(confluent_kafka.Producer):
                 Literal["test.gcn.nasa.gov"],
                 Literal["dev.gcn.nasa.gov"],
             ]
-        ] = 'gcn.nasa.gov',
+        ] = None,
         **kwargs,
     ):
         super().__init__(
@@ -102,7 +99,7 @@ class Consumer(confluent_kafka.Consumer):
                 Literal["test.gcn.nasa.gov"],
                 Literal["dev.gcn.nasa.gov"],
             ]
-        ] = 'gcn.nasa.gov',
+        ] = None,
         **kwargs,
     ):
         super().__init__(
