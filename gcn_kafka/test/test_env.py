@@ -14,5 +14,5 @@ def test_config_from_env(monkeypatch):
 
     monkeypatch.setattr(os, 'environ', env)
 
-    config = config_from_env(env, 'FOO_')
+    config = config_from_env(prefix='FOO_')
     assert config == {'bar.bat-baz_': '123'}
