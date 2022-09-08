@@ -1,6 +1,42 @@
 [build-system]
-requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2", "wheel"]
+requires = ["setuptools>=61", "setuptools_scm[toml]>=6.2", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "gcn-kafka"
+description = "Kafka client for NASA's General Coordinates Network (GCN)"
+license = { text = "CC0-1.0" }
+readme = "README.md"
+authors = [
+    { name = "Leo Singer", email = "leo.p.singer@nasa.gov" },
+    { name = "Tom Barclay", email = "tb@umbc.edu" },
+    { name = "Eric Burns", email = "ericburns@lsu.edu" }
+]
+classifiers = [
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: System :: Networking"
+]
+dependencies = [
+    "authlib",
+    "certifi",
+    "confluent-kafka >= 1.6.1",
+    "requests",
+    "typing-extensions; python_version<='3.7'"
+]
+requires-python = ">=3.7"
+dynamic = [ "version" ]
+
+[project.urls]
+source = "https://github.com/nasa-gcn/gcn-kafka-python"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["gcn_kafka"]
 
 [tool.setuptools_scm]
 write_to = "gcn_kafka/_version.py"
