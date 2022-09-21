@@ -10,6 +10,7 @@ from uuid import uuid4
 
 import certifi
 import confluent_kafka
+import confluent_kafka.admin
 
 from .oidc import set_oauth_cb
 
@@ -105,6 +106,36 @@ class Consumer(confluent_kafka.Consumer):
         super().__init__(
             get_config(
                 "consumer",
+                config,
+                client_id=client_id,
+                client_secret=client_secret,
+                domain=domain,
+                **kwargs,
+            )
+        )
+        # Workaround for https://github.com/edenhill/librdkafka/issues/3263.
+        # FIXME: Remove once confluent-kafka-python 1.9.0 has been released.
+        self.poll(0)
+
+
+class AdminClient(confluent_kafka.admin.AdminClient):
+    def __init__(
+        self,
+        config: Optional[Mapping[str, Any]] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
+        domain: Optional[
+            Union[
+                Literal["gcn.nasa.gov"],
+                Literal["test.gcn.nasa.gov"],
+                Literal["dev.gcn.nasa.gov"],
+            ]
+        ] = None,
+        **kwargs,
+    ):
+        super().__init__(
+            get_config(
+                "admin",
                 config,
                 client_id=client_id,
                 client_secret=client_secret,
