@@ -48,6 +48,9 @@ def get_config(mode, config, **kwargs):
     if mode == "consumer" and not config.get("group.id"):
         config["group.id"] = str(uuid4())
 
+    if mode == "producer":
+        config.setdefault('compression.type', 'zstd')
+
     set_oauth_cb(config)
     return config
 
