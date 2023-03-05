@@ -41,13 +41,20 @@ Subscribe to topics and receive alerts:
 consumer.subscribe(['gcn.classic.text.FERMI_GBM_FIN_POS',
                     'gcn.classic.text.LVC_INITIAL'])
 while True:
-    for message in consumer.consume():
+    for message in consumer.consume(timeout=1):
         print(message.value())
 ```
 
+The `timeout` argument to `consume()`, given as an integer number of seconds,
+will allow the program to exit quickly once it has reached the end of the
+existing message buffer. This is useful for users who just want to recover an
+older message from the stream. `timeout` will also make the `while True`
+infinite loop interruptible via the standard ctrl-c key sequence, which
+`consume()` ignores.
+
 ## Testing and Development Kafka Clusters
 
-GCN has three Kafka clusters: production, testing, and an internal development deployment. Use the optional ``domain`` keyword argument to select which broker to connect to.
+GCN has three Kafka clusters: production, testing, and an internal development deployment. Use the optional `domain` keyword argument to select which broker to connect to.
 
 ```python
 # Production (default)
@@ -89,7 +96,7 @@ topics = ['gcn.classic.voevent.FERMI_GBM_SUBTHRESH']
 consumer.subscribe(topics)
 
 while True:
-    for message in consumer.consume():
+    for message in consumer.consume(timeout=1):
         print(message.value())
         consumer.commit(message)
 ```
@@ -114,15 +121,13 @@ topics = ['gcn.classic.voevent.INTEGRAL_SPIACS']
 consumer.subscribe(topics)
 
 while True:
-    for message in consumer.consume():
+    for message in consumer.consume(timeout=1):
         print(message.value())
 ```
 
-Note: Adding a timeout argument, given as an integer number of seconds, to consume() will allow the program to exit quickly once it has reached the end of the existing message buffer. This is useful for users who just want to recover an older message from the stream.
-
 **How can I search for messages occurring within a given date range?**
 
-To search for messages in a given date range, you can use the offsets_for_times() function from the Consumer class to get the message offsets for the desired date range. You can then assign the starting offset to the Consumer and read the desired number of messages. When doing so, keep in mind that the stream buffers are finite in size. It is not possible to recover messages prior to the start of the stream buffer. The GCN stream buffers are currently set to hold messages from the past few days.
+To search for messages in a given date range, you can use the `offsets_for_times()` function from the Consumer class to get the message offsets for the desired date range. You can then assign the starting offset to the Consumer and read the desired number of messages. When doing so, keep in mind that the stream buffers are finite in size. It is not possible to recover messages prior to the start of the stream buffer. The GCN stream buffers are currently set to hold messages from the past few days.
 
 Example code:
 ```python3
@@ -145,6 +150,6 @@ end = consumer.offsets_for_times(
     [TopicPartition(topic, 0, timestamp2)])
 
 consumer.assign(start)
-for message in consumer.consume(end[0].offset - start[0].offset):
+for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
     print(message.value())
 ```
