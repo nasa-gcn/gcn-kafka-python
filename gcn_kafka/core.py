@@ -11,8 +11,11 @@ from uuid import uuid4
 import certifi
 import confluent_kafka
 import confluent_kafka.admin
+from jsonschema import validate, exceptions
+import json
+import requests
 
-from .oidc import set_oauth_cb
+from oidc import set_oauth_cb
 
 
 def get_config(mode, config, **kwargs):
@@ -90,6 +93,25 @@ class Producer(confluent_kafka.Producer):
         # FIXME: Remove once fixed upstream, or on removal of oauth_cb.
         self.poll(0)
 
+
+    def produce(self, topic, data):
+        try:
+            request = requests.get(data['$schema'])
+            schema_model = json.loads(request.content.decode())
+            validate(data, schema_model)
+        except exceptions.ValidationError:
+            print("The instance of the data provided is invalid against the schema")
+            return
+        except exceptions.SchemaError:
+            print("The provided schema is invalid")
+            return
+        
+        notice_id = str(uuid4())
+        data['notice_id'] = notice_id
+        
+        super().produce(topic, json.dumps(data))
+        print(f'Successfully posted topic with notice id: {notice_id}')
+        
 
 class Consumer(confluent_kafka.Consumer):
     def __init__(
