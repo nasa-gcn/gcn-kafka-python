@@ -94,7 +94,7 @@ class Producer(confluent_kafka.Producer):
         self.poll(0)
 
 
-    def produce(self, topic, data):
+    def produce_json_notice(self, topic:str, data:dict):
         try:
             request = requests.get(data['$schema'])
             schema_model = json.loads(request.content.decode())
