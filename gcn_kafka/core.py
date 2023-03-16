@@ -15,7 +15,7 @@ from jsonschema import validate, exceptions
 import json
 import requests
 
-from oidc import set_oauth_cb
+from .oidc import set_oauth_cb
 
 
 def get_config(mode, config, **kwargs):
