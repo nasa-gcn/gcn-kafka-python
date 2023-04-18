@@ -14,11 +14,14 @@ jobs:
         - linux: py38
         - linux: py39
         - linux: py310
+        - linux: py311
         - macos: py37
         - macos: py38
         - macos: py39
         - macos: py310
+        - macos: py311
         - windows: py37
         - windows: py38
         - windows: py39
         - windows: py310
+        - windows: py311
