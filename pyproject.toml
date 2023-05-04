@@ -22,7 +22,7 @@ classifiers = [
 dependencies = [
     "authlib",
     "certifi",
-    "confluent-kafka >= 1.6.1, != 2.1.0",
+    "confluent-kafka >= 1.6.1, != 2.1.0, != 2.1.1",
     "requests",
     "typing-extensions; python_version<='3.7'"
 ]
