@@ -21,10 +21,8 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "authlib",
     "certifi",
-    "confluent-kafka >= 2.2.0",
-    "requests",
+    "confluent-kafka >= 2.11.0",
 ]
 requires-python = ">=3.9"
 dynamic = [ "version" ]

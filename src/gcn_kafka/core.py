@@ -7,8 +7,6 @@ import certifi
 import confluent_kafka
 import confluent_kafka.admin
 
-from .oidc import set_oauth_cb
-
 
 def get_config(mode, config, **kwargs):
     # Merge configuration from user.
@@ -16,12 +14,13 @@ def get_config(mode, config, **kwargs):
 
     # SSL configuration.
     if config.setdefault("security.protocol", "sasl_ssl") == "sasl_ssl":
-        if not config.get("ssl.ca.location"):
-            # confluent-kafka wheels are statically linked against openssl,
-            # but _that_ version of openssl may expect to find the CA cert
-            # bundle at a different location than the users's system. Provide
-            # certificate bundle from Certifi.
-            config["ssl.ca.location"] = certifi.where()
+        # confluent-kafka wheels are statically linked against openssl,
+        # but _that_ version of openssl may expect to find the CA cert
+        # bundle at a different location than the users's system. Provide
+        # certificate bundle from Certifi.
+        default_cert_location = certifi.where()
+        config.setdefault("ssl.ca.location", default_cert_location)
+        config.setdefault("https.ca.location", default_cert_location)
 
     domain = config.pop("domain", "gcn.nasa.gov")
     client_id = config.pop("client_id", None)
@@ -46,7 +45,6 @@ def get_config(mode, config, **kwargs):
     if mode == "producer":
         config.setdefault("compression.type", "zstd")
 
-    set_oauth_cb(config)
     return config
 
 
@@ -81,9 +79,6 @@ class Producer(confluent_kafka.Producer):
                 **kwargs,
             )
         )
-        # Workaround for https://github.com/confluentinc/librdkafka/issues/3753#issuecomment-1058272987.
-        # FIXME: Remove once fixed upstream, or on removal of oauth_cb.
-        self.poll(0)
 
 
 class Consumer(confluent_kafka.Consumer):
@@ -111,9 +106,6 @@ class Consumer(confluent_kafka.Consumer):
                 **kwargs,
             )
         )
-        # Workaround for https://github.com/confluentinc/librdkafka/issues/3753#issuecomment-1058272987.
-        # FIXME: Remove once fixed upstream, or on removal of oauth_cb.
-        self.poll(0)
 
 
 class AdminClient(confluent_kafka.admin.AdminClient):
@@ -141,6 +133,3 @@ class AdminClient(confluent_kafka.admin.AdminClient):
                 **kwargs,
             )
         )
-        # Workaround for https://github.com/confluentinc/librdkafka/issues/3753#issuecomment-1058272987.
-        # FIXME: Remove once fixed upstream, or on removal of oauth_cb.
-        self.poll(0)
