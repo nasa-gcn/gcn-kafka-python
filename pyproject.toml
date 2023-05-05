@@ -20,10 +20,8 @@ classifiers = [
     "Topic :: System :: Networking"
 ]
 dependencies = [
-    "authlib",
     "certifi",
     "confluent-kafka >= 2.2.0",
-    "requests",
 ]
 requires-python = ">=3.9"
 dynamic = [ "version" ]
