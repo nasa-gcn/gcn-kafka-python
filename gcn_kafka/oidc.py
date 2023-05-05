@@ -7,9 +7,11 @@ def set_oauth_cb(config):
     """Implement client support for KIP-768 OpenID Connect.
 
     Apache Kafka 3.1.0 supports authentication using OpenID Client Credentials.
-    Native support for Python is coming in the next release of librdkafka
-    (version 1.9.0). Meanwhile, this is a pure Python implementation of the
-    refresh token callback.
+    Native support for Python is still incomplete due to this issue:
+    https://github.com/confluentinc/librdkafka/issues/3751
+
+    Meanwhile, this is a pure Python implementation of the refresh token
+    callback.
     """
     if config.pop("sasl.oauthbearer.method", None) != "oidc":
         return

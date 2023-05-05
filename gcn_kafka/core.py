@@ -86,7 +86,7 @@ class Producer(confluent_kafka.Producer):
                 **kwargs,
             )
         )
-        # Workaround for https://github.com/edenhill/librdkafka/issues/3871.
+        # Workaround for https://github.com/confluentinc/librdkafka/issues/3753#issuecomment-1058272987.
         # FIXME: Remove once fixed upstream, or on removal of oauth_cb.
         self.poll(0)
 
@@ -116,7 +116,7 @@ class Consumer(confluent_kafka.Consumer):
                 **kwargs,
             )
         )
-        # Workaround for https://github.com/edenhill/librdkafka/issues/3871.
+        # Workaround for https://github.com/confluentinc/librdkafka/issues/3753#issuecomment-1058272987.
         # FIXME: Remove once fixed upstream, or on removal of oauth_cb.
         self.poll(0)
 
@@ -146,6 +146,6 @@ class AdminClient(confluent_kafka.admin.AdminClient):
                 **kwargs,
             )
         )
-        # Workaround for https://github.com/edenhill/librdkafka/issues/3871.
+        # Workaround for https://github.com/confluentinc/librdkafka/issues/3753#issuecomment-1058272987.
         # FIXME: Remove once fixed upstream, or on removal of oauth_cb.
         self.poll(0)
