@@ -12,8 +12,6 @@ import certifi
 import confluent_kafka
 import confluent_kafka.admin
 
-from .oidc import set_oauth_cb
-
 
 def get_config(mode, config, **kwargs):
     # Merge configuration from user.
@@ -51,7 +49,6 @@ def get_config(mode, config, **kwargs):
     if mode == "producer":
         config.setdefault('compression.type', 'zstd')
 
-    set_oauth_cb(config)
     return config
 
 
