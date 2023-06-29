@@ -153,3 +153,9 @@ consumer.assign(start)
 for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
     print(message.value())
 ```
+
+## Known Issues
+
+### confluent-kafka-python
+
+If you encounter a segmentation fault, please refer to [this github link](https://github.com/confluentinc/confluent-kafka-python/issues/1547) for help troubleshooting. The bug in the confluent-kafka-python package leads to a segmentation fault when a subscribed topic is unavailable.
