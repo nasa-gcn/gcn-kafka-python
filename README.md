@@ -157,6 +157,6 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
 ## Known Issues
 
 ### confluent-kafka-python
-If you use confluent-kafka-python v2.1.0 or v2.1.1 with librdkafka v2.1.1 you will encounter a segmentation fault when subscribed to inactive topics.
+If you use confluent-kafka-python v2.1.0 or v2.1.1 with librdkafka v2.1.1 you will encounter a segmentation fault when subscribed to unavailable topics.
 
 Please refer to [the confluent-kafka-python github issue](https://github.com/confluentinc/confluent-kafka-python/issues/1547) for updates on the issue.
