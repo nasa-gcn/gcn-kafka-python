@@ -109,8 +109,7 @@ Example code:
 ```python3
 from gcn_kafka import Consumer
 
-config = {'group.id': '',
-          'auto.offset.reset': 'earliest'}
+config = {'auto.offset.reset': 'earliest'}
 
 consumer = Consumer(config=config,
                     client_id='fill me in',
