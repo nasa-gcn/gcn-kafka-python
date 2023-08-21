@@ -1,11 +1,8 @@
 # SPDX-License-Identifier: CC0-1.0
 
-# FIXME: Remove after dropping support for Python 3.7
-from __future__ import annotations
-
 import os
 import re
-from typing import Optional
+from typing import Mapping, Optional
 
 env_key_splitter = re.compile(r'_+')
 replacement_dict = {'_': '.', '__': '-', '___': '_'}
@@ -25,7 +22,7 @@ def replacement(match: re.Match) -> str:
     return replacement_dict.get(text) or text
 
 
-def config_from_env(env: Optional[dict[str, str]] = None, prefix: str = 'KAFKA_') -> dict[str, str]:
+def config_from_env(env: Optional[Mapping[str, str]] = None, prefix: str = 'KAFKA_') -> Mapping[str, str]:
     """Construct a Kafka client configuration dictionary from env variables.
     This uses the same rules as
     https://docs.confluent.io/platform/current/installation/docker/config-reference.html
