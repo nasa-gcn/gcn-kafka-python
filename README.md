@@ -42,6 +42,9 @@ consumer.subscribe(['gcn.classic.text.FERMI_GBM_FIN_POS',
                     'gcn.classic.text.LVC_INITIAL'])
 while True:
     for message in consumer.consume(timeout=1):
+        if message.error():
+            print(message.error())
+            continue
         print(message.value())
 ```
 
