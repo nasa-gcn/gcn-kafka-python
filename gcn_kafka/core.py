@@ -1,11 +1,6 @@
 # SPDX-License-Identifier: CC0-1.0
 
-from typing import Any, Mapping, Optional, Union
-try:
-    from typing import Literal
-except ImportError:
-    # FIXME: Remove once we drop support for Python 3.7.
-    from typing_extensions import Literal
+from typing import Any, Literal, Mapping, Optional, Union
 from uuid import uuid4
 
 import certifi
