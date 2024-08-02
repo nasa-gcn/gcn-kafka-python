@@ -4,15 +4,15 @@ import os
 import re
 from typing import Mapping, Optional
 
-env_key_splitter = re.compile(r'_+')
-replacement_dict = {'_': '.', '__': '-', '___': '_'}
+env_key_splitter = re.compile(r"_+")
+replacement_dict = {"_": ".", "__": "-", "___": "_"}
 
 
 # Adapted from https://peps.python.org/pep-0616/
 # # FIXME: Remove after dropping support for Python 3.8
 def removeprefix(self: str, prefix: str) -> str:
     if self.startswith(prefix):
-        return self[len(prefix):]
+        return self[len(prefix) :]
     else:
         return self[:]
 
@@ -22,7 +22,9 @@ def replacement(match: re.Match) -> str:
     return replacement_dict.get(text) or text
 
 
-def config_from_env(env: Optional[Mapping[str, str]] = None, prefix: str = 'KAFKA_') -> Mapping[str, str]:
+def config_from_env(
+    env: Optional[Mapping[str, str]] = None, prefix: str = "KAFKA_"
+) -> Mapping[str, str]:
     """Construct a Kafka client configuration dictionary from env variables.
     This uses the same rules as
     https://docs.confluent.io/platform/current/installation/docker/config-reference.html

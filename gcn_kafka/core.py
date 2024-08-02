@@ -37,14 +37,14 @@ def get_config(mode, config, **kwargs):
         if client_secret:
             config.setdefault("sasl.oauthbearer.client.secret", client_secret)
         config.setdefault(
-            "sasl.oauthbearer.token.endpoint.url",
-            f"https://auth.{domain}/oauth2/token")
+            "sasl.oauthbearer.token.endpoint.url", f"https://auth.{domain}/oauth2/token"
+        )
 
     if mode == "consumer" and not config.get("group.id"):
         config["group.id"] = str(uuid4())
 
     if mode == "producer":
-        config.setdefault('compression.type', 'zstd')
+        config.setdefault("compression.type", "zstd")
 
     set_oauth_cb(config)
     return config
