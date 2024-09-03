@@ -31,3 +31,5 @@ jobs:
         - windows: py310
         - windows: py311
         - windows: py312
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
