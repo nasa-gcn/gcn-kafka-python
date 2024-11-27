@@ -2,7 +2,6 @@
 __pycache__
 .coverage
 .tox
-.vscode
 build
 dist
 _version.py

@@ -28,6 +28,9 @@ repos:
       - id: trailing-whitespace
         # Trims trailing whitespace.
         exclude_types: [python] # Covered by Ruff W291.
+      - id: pretty-format-json
+        args: ['--autofix']
+        # Checks that all your JSON files are pretty.
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
     rev: v0.8.0
