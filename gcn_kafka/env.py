@@ -8,15 +8,6 @@ env_key_splitter = re.compile(r"_+")
 replacement_dict = {"_": ".", "__": "-", "___": "_"}
 
 
-# Adapted from https://peps.python.org/pep-0616/
-# # FIXME: Remove after dropping support for Python 3.8
-def removeprefix(self: str, prefix: str) -> str:
-    if self.startswith(prefix):
-        return self[len(prefix) :]
-    else:
-        return self[:]
-
-
 def replacement(match: re.Match) -> str:
     text = match[0]
     return replacement_dict.get(text) or text
@@ -40,6 +31,6 @@ def config_from_env(
     config = {}
     for key, value in env.items():
         if key.startswith(prefix):
-            key = env_key_splitter.sub(replacement, removeprefix(key, prefix))
+            key = env_key_splitter.sub(replacement, key.removeprefix(prefix))
             config[key.lower()] = value
     return config
