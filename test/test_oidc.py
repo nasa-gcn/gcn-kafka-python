@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from .. import oidc
+from gcn_kafka import oidc
 
 
 def test_no_oidc():

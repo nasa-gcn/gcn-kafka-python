@@ -2,7 +2,7 @@
 
 import os
 
-from ..env import config_from_env
+from gcn_kafka.env import config_from_env
 
 
 def test_config_from_env(monkeypatch):

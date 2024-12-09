@@ -1,4 +1,4 @@
-from ..core import update_config
+from gcn_kafka.core import update_config
 
 
 def test_update_config_no_overwrite():
