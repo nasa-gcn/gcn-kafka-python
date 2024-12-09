@@ -34,8 +34,9 @@ source = "https://github.com/nasa-gcn/gcn-kafka-python"
 [project.optional-dependencies]
 test = ["pytest"]
 
-[tool.setuptools.packages.find]
-include = ["gcn_kafka"]
-
 [tool.setuptools_scm]
-write_to = "gcn_kafka/_version.py"
+write_to = "src/gcn_kafka/_version.py"
+
+[tool.coverage.run]
+source = ["test"]
+source_pkgs = ["gcn_kafka"]
