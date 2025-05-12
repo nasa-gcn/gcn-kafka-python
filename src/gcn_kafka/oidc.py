@@ -1,7 +1,9 @@
 # SPDX-License-Identifier: CC0-1.0
 from pathlib import Path
+
 import jwt
 from authlib.integrations.requests_client import OAuth2Session
+
 
 def set_oauth_cb(config, scope, client_id):
     """Implement client support for KIP-768 OpenID Connect.
@@ -22,7 +24,7 @@ def set_oauth_cb(config, scope, client_id):
             refresh_token = file.read()
 
         client = OAuth2Session(client_id)
-        response = client.refresh_token(url,refresh_token)
+        response = client.refresh_token(url, refresh_token)
 
         return response.json()
 
