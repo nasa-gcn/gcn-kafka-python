@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 from authlib.integrations.requests_client import OAuth2Session
+import jwt
 
 
 def set_oauth_cb(config, scope, client_id):
