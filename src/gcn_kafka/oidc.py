@@ -1,6 +1,4 @@
 # SPDX-License-Identifier: CC0-1.0
-
-from authlib.integrations.requests_client import OAuth2Session
 import jwt
 
 
@@ -14,6 +12,7 @@ def set_oauth_cb(config, scope, client_id):
     Meanwhile, this is a pure Python implementation of the refresh token
     callback.
     """
+
     def refresh_cognito_tokens():
         url = config["sasl.oauthbearer.token.endpoint.url"]
 
@@ -42,4 +41,3 @@ def set_oauth_cb(config, scope, client_id):
         return jwt_token, exp
 
     config["oauth_cb"] = oauthbearer_token_refresh_cb
-    
