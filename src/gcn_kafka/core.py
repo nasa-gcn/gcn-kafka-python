@@ -123,8 +123,8 @@ class AdminClient(confluent_kafka.admin.AdminClient):
         super().__init__(
             get_config(
                 "admin",
-                scope="gcn.nasa.gov/kafka-admin",
                 config,
+                scope="gcn.nasa.gov/kafka-admin",
                 client_id=client_id,
                 domain=domain,
                 **kwargs,
