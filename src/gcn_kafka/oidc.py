@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: CC0-1.0
 from pathlib import Path
+
 import jwt
 from authlib.integrations.requests_client import OAuth2Session
 
