@@ -40,6 +40,7 @@ def get_config(mode, scope, config, **kwargs):
     set_oauth_cb(config, scope, client_id)
     return config
 
+
 def update_config(config, **kwargs):
     result = dict(config or {})
     result.update({k: v for k, v in kwargs.items() if v is not None})
@@ -64,7 +65,7 @@ class Producer(confluent_kafka.Producer):
         super().__init__(
             get_config(
                 "producer",
-                scope, 
+                scope,
                 config,
                 client_id=client_id,
                 domain=domain,

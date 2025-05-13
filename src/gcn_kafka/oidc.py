@@ -3,6 +3,7 @@ from pathlib import Path
 import jwt
 from authlib.integrations.requests_client import OAuth2Session
 
+
 def set_oauth_cb(config, scope, client_id):
     """Implement client support for KIP-768 OpenID Connect.
 
@@ -14,17 +15,16 @@ def set_oauth_cb(config, scope, client_id):
     callback.
     """
 
+    client = OAuth2Session(client_id=client_id)
+
     def refresh_cognito_tokens():
         url = config["sasl.oauthbearer.token.endpoint.url"]
 
         home = Path.home()
         with open(home.joinpath(".gcn", scope.replace("/", "_")), "r") as file:
-            refresh_token = file.read()
-
-        client = OAuth2Session(client_id)
-        response = client.refresh_token(url,refresh_token)
-
-        return response.json()
+            token = file.read()
+        newToken = client.refresh_token(url, token)
+        return newToken
 
     def oauthbearer_token_refresh_cb(*_, **__):
         token_info = refresh_cognito_tokens()
