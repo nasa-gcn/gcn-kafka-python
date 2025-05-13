@@ -1,9 +1,11 @@
 # SPDX-License-Identifier: CC0-1.0
+from pathlib import Path
 
+import jwt
 from authlib.integrations.requests_client import OAuth2Session
 
 
-def set_oauth_cb(config):
+def set_oauth_cb(config, scope, client_id):
     """Implement client support for KIP-768 OpenID Connect.
 
     Apache Kafka 3.1.0 supports authentication using OpenID Client Credentials.
@@ -13,18 +15,23 @@ def set_oauth_cb(config):
     Meanwhile, this is a pure Python implementation of the refresh token
     callback.
     """
-    if config.pop("sasl.oauthbearer.method", None) != "oidc":
-        return
 
-    client_id = config.pop("sasl.oauthbearer.client.id")
-    client_secret = config.pop("sasl.oauthbearer.client.secret", None)
-    scope = config.pop("sasl.oauthbearer.scope", None)
-    token_endpoint = config.pop("sasl.oauthbearer.token.endpoint.url")
+    client = OAuth2Session(client_id=client_id)
 
-    session = OAuth2Session(client_id, client_secret, scope=scope)
+    def refresh_cognito_tokens():
+        url = config["sasl.oauthbearer.token.endpoint.url"]
 
-    def oauth_cb(*_, **__):
-        token = session.fetch_token(token_endpoint, grant_type="client_credentials")
-        return token["access_token"], token["expires_at"]
+        home = Path.home()
+        with open(home.joinpath(".gcn", scope.replace("/", "_")), "r") as file:
+            token = file.read()
+        newToken = client.refresh_token(url, token)
+        return newToken
 
-    config["oauth_cb"] = oauth_cb
+    def oauthbearer_token_refresh_cb(*_, **__):
+        token_info = refresh_cognito_tokens()
+        jwt_token = token_info["access_token"]
+        decoded = jwt.decode(jwt_token, options={"verify_signature": False})
+        exp = decoded["exp"]
+        return jwt_token, exp
+
+    config["oauth_cb"] = oauthbearer_token_refresh_cb

@@ -10,7 +10,7 @@ import confluent_kafka.admin
 from .oidc import set_oauth_cb
 
 
-def get_config(mode, config, **kwargs):
+def get_config(mode, scope, config, **kwargs):
     # Merge configuration from user.
     config = update_config(config, **kwargs)
 
@@ -25,20 +25,11 @@ def get_config(mode, config, **kwargs):
 
     domain = config.pop("domain", "gcn.nasa.gov")
     client_id = config.pop("client_id", None)
-    client_secret = config.pop("client_secret", None)
-
     config.setdefault("bootstrap.servers", f"kafka.{domain}")
-
-    if client_id:
-        # Configure authentication and authorization using OpenID Connect.
-        config.setdefault("sasl.mechanisms", "OAUTHBEARER")
-        config.setdefault("sasl.oauthbearer.method", "oidc")
-        config.setdefault("sasl.oauthbearer.client.id", client_id)
-        if client_secret:
-            config.setdefault("sasl.oauthbearer.client.secret", client_secret)
-        config.setdefault(
-            "sasl.oauthbearer.token.endpoint.url", f"https://auth.{domain}/oauth2/token"
-        )
+    config.setdefault("sasl.mechanisms", "OAUTHBEARER")
+    config.setdefault(
+        "sasl.oauthbearer.token.endpoint.url", f"https://auth.{domain}/oauth2/token"
+    )
 
     if mode == "consumer" and not config.get("group.id"):
         config["group.id"] = str(uuid4())
@@ -46,7 +37,7 @@ def get_config(mode, config, **kwargs):
     if mode == "producer":
         config.setdefault("compression.type", "zstd")
 
-    set_oauth_cb(config)
+    set_oauth_cb(config, scope, client_id)
     return config
 
 
@@ -59,9 +50,9 @@ def update_config(config, **kwargs):
 class Producer(confluent_kafka.Producer):
     def __init__(
         self,
+        scope: Optional[str] = None,  # Maybe these should be required?
         config: Optional[Mapping[str, Any]] = None,
         client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
         domain: Optional[
             Union[
                 Literal["gcn.nasa.gov"],
@@ -74,9 +65,9 @@ class Producer(confluent_kafka.Producer):
         super().__init__(
             get_config(
                 "producer",
+                scope,
                 config,
                 client_id=client_id,
-                client_secret=client_secret,
                 domain=domain,
                 **kwargs,
             )
@@ -89,9 +80,9 @@ class Producer(confluent_kafka.Producer):
 class Consumer(confluent_kafka.Consumer):
     def __init__(
         self,
+        scope: Optional[str] = None,  # Maybe these should be required?
         config: Optional[Mapping[str, Any]] = None,
         client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
         domain: Optional[
             Union[
                 Literal["gcn.nasa.gov"],
@@ -104,9 +95,9 @@ class Consumer(confluent_kafka.Consumer):
         super().__init__(
             get_config(
                 "consumer",
+                scope,
                 config,
                 client_id=client_id,
-                client_secret=client_secret,
                 domain=domain,
                 **kwargs,
             )
@@ -121,7 +112,6 @@ class AdminClient(confluent_kafka.admin.AdminClient):
         self,
         config: Optional[Mapping[str, Any]] = None,
         client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
         domain: Optional[
             Union[
                 Literal["gcn.nasa.gov"],
@@ -135,8 +125,8 @@ class AdminClient(confluent_kafka.admin.AdminClient):
             get_config(
                 "admin",
                 config,
+                scope="gcn.nasa.gov/kafka-admin",
                 client_id=client_id,
-                client_secret=client_secret,
                 domain=domain,
                 **kwargs,
             )
