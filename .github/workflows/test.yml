@@ -6,7 +6,7 @@ on:
 
 jobs:
   tox:
-    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@d9b81a07e789d1b1921ab5fe33de2ddcbbd02c3f  # v2.3.0
+    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@a138926f6e4f9667d1306c24f24f5bdcaa01fbab  # v2.5.0
     with:
       coverage: 'codecov'
       envs: |
