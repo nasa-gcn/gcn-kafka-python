@@ -30,7 +30,7 @@ dynamic = [ "version" ]
 [project.urls]
 source = "https://github.com/nasa-gcn/gcn-kafka-python"
 
-[project.optional-dependencies]
+[dependency-groups]
 test = ["pytest"]
 
 [tool.setuptools_scm]
