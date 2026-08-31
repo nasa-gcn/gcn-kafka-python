@@ -25,8 +25,8 @@ Create a consumer.
 
 ```python
 from gcn_kafka import Consumer
-consumer = Consumer(client_id='fill me in',
-                    client_secret='fill me in')
+
+consumer = Consumer(client_id="fill me in", client_secret="fill me in")
 ```
 
 List all topics:
@@ -38,8 +38,9 @@ print(consumer.list_topics().topics)
 Subscribe to topics and receive alerts:
 
 ```python
-consumer.subscribe(['gcn.classic.text.FERMI_GBM_FIN_POS',
-                    'gcn.classic.text.LVC_INITIAL'])
+consumer.subscribe(
+    ["gcn.classic.text.FERMI_GBM_FIN_POS", "gcn.classic.text.LVC_INITIAL"]
+)
 while True:
     for message in consumer.consume(timeout=1):
         if message.error():
@@ -61,19 +62,19 @@ GCN has three Kafka clusters: production, testing, and an internal development d
 
 ```python
 # Production (default)
-consumer = Consumer(client_id='fill me in',
-                    client_secret='fill me in',
-                    domain='gcn.nasa.gov')
+consumer = Consumer(
+    client_id="fill me in", client_secret="fill me in", domain="gcn.nasa.gov"
+)
 
 # Testing
-consumer = Consumer(client_id='fill me in',
-                    client_secret='fill me in',
-                    domain='test.gcn.nasa.gov')
+consumer = Consumer(
+    client_id="fill me in", client_secret="fill me in", domain="test.gcn.nasa.gov"
+)
 
 # Development (internal)
-consumer = Consumer(client_id='fill me in',
-                    client_secret='fill me in',
-                    domain='dev.gcn.nasa.gov')
+consumer = Consumer(
+    client_id="fill me in", client_secret="fill me in", domain="dev.gcn.nasa.gov"
+)
 ```
 
 ## FAQ
@@ -86,16 +87,20 @@ Example code:
 ```python3
 from gcn_kafka import Consumer
 
-config = {'group.id': 'my group name',
-          'auto.offset.reset': 'earliest',
-          'enable.auto.commit': False}
+config = {
+    "group.id": "my group name",
+    "auto.offset.reset": "earliest",
+    "enable.auto.commit": False,
+}
 
-consumer = Consumer(config=config,
-                    client_id='fill me in',
-                    client_secret='fill me in',
-                    domain='gcn.nasa.gov')
+consumer = Consumer(
+    config=config,
+    client_id="fill me in",
+    client_secret="fill me in",
+    domain="gcn.nasa.gov",
+)
 
-topics = ['gcn.classic.voevent.FERMI_GBM_SUBTHRESH']
+topics = ["gcn.classic.voevent.FERMI_GBM_SUBTHRESH"]
 consumer.subscribe(topics)
 
 while True:
@@ -112,14 +117,16 @@ Example code:
 ```python3
 from gcn_kafka import Consumer
 
-config = {'auto.offset.reset': 'earliest'}
+config = {"auto.offset.reset": "earliest"}
 
-consumer = Consumer(config=config,
-                    client_id='fill me in',
-                    client_secret='fill me in',
-                    domain='gcn.nasa.gov')
+consumer = Consumer(
+    config=config,
+    client_id="fill me in",
+    client_secret="fill me in",
+    domain="gcn.nasa.gov",
+)
 
-topics = ['gcn.classic.voevent.INTEGRAL_SPIACS']
+topics = ["gcn.classic.voevent.INTEGRAL_SPIACS"]
 consumer.subscribe(topics)
 
 while True:
@@ -137,19 +144,19 @@ import datetime
 from gcn_kafka import Consumer
 from confluent_kafka import TopicPartition
 
-consumer = Consumer(client_id='fill me in',
-                    client_secret='fill me in',
-                    domain='gcn.nasa.gov')
+consumer = Consumer(
+    client_id="fill me in", client_secret="fill me in", domain="gcn.nasa.gov"
+)
 
 # get messages occurring 3 days ago
-timestamp1 = int((datetime.datetime.now() - datetime.timedelta(days=3)).timestamp() * 1000)
-timestamp2 = timestamp1 + 86400000 # +1 day
+timestamp1 = int(
+    (datetime.datetime.now() - datetime.timedelta(days=3)).timestamp() * 1000
+)
+timestamp2 = timestamp1 + 86400000  # +1 day
 
-topic = 'gcn.classic.voevent.INTEGRAL_SPIACS'
-start = consumer.offsets_for_times(
-    [TopicPartition(topic, 0, timestamp1)])
-end = consumer.offsets_for_times(
-    [TopicPartition(topic, 0, timestamp2)])
+topic = "gcn.classic.voevent.INTEGRAL_SPIACS"
+start = consumer.offsets_for_times([TopicPartition(topic, 0, timestamp1)])
+end = consumer.offsets_for_times([TopicPartition(topic, 0, timestamp2)])
 
 consumer.assign(start)
 for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
