@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 from collections.abc import Mapping
-from typing import Any, Literal, Optional
+from typing import Any, Literal
 from uuid import uuid4
 
 import certifi
@@ -58,12 +58,11 @@ def update_config(config, **kwargs):
 class Producer(confluent_kafka.Producer):
     def __init__(
         self,
-        config: Optional[Mapping[str, Any]] = None,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
-        domain: Optional[
-            Literal["gcn.nasa.gov", "test.gcn.nasa.gov", "dev.gcn.nasa.gov"]
-        ] = None,
+        config: Mapping[str, Any] | None = None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        domain: Literal["gcn.nasa.gov", "test.gcn.nasa.gov", "dev.gcn.nasa.gov"]
+        | None = None,
         **kwargs,
     ):
         super().__init__(
@@ -81,12 +80,11 @@ class Producer(confluent_kafka.Producer):
 class Consumer(confluent_kafka.Consumer):
     def __init__(
         self,
-        config: Optional[Mapping[str, Any]] = None,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
-        domain: Optional[
-            Literal["gcn.nasa.gov", "test.gcn.nasa.gov", "dev.gcn.nasa.gov"]
-        ] = None,
+        config: Mapping[str, Any] | None = None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        domain: Literal["gcn.nasa.gov", "test.gcn.nasa.gov", "dev.gcn.nasa.gov"]
+        | None = None,
         **kwargs,
     ):
         super().__init__(
@@ -104,12 +102,11 @@ class Consumer(confluent_kafka.Consumer):
 class AdminClient(confluent_kafka.admin.AdminClient):
     def __init__(
         self,
-        config: Optional[Mapping[str, Any]] = None,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
-        domain: Optional[
-            Literal["gcn.nasa.gov", "test.gcn.nasa.gov", "dev.gcn.nasa.gov"]
-        ] = None,
+        config: Mapping[str, Any] | None = None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        domain: Literal["gcn.nasa.gov", "test.gcn.nasa.gov", "dev.gcn.nasa.gov"]
+        | None = None,
         **kwargs,
     ):
         super().__init__(
