@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
-from typing import Any, Literal, Mapping, Optional, Union
+from collections.abc import Mapping
+from typing import Any, Literal, Optional
 from uuid import uuid4
 
 import certifi
@@ -61,11 +62,7 @@ class Producer(confluent_kafka.Producer):
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
         domain: Optional[
-            Union[
-                Literal["gcn.nasa.gov"],
-                Literal["test.gcn.nasa.gov"],
-                Literal["dev.gcn.nasa.gov"],
-            ]
+            Literal["gcn.nasa.gov", "test.gcn.nasa.gov", "dev.gcn.nasa.gov"]
         ] = None,
         **kwargs,
     ):
@@ -88,11 +85,7 @@ class Consumer(confluent_kafka.Consumer):
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
         domain: Optional[
-            Union[
-                Literal["gcn.nasa.gov"],
-                Literal["test.gcn.nasa.gov"],
-                Literal["dev.gcn.nasa.gov"],
-            ]
+            Literal["gcn.nasa.gov", "test.gcn.nasa.gov", "dev.gcn.nasa.gov"]
         ] = None,
         **kwargs,
     ):
@@ -115,11 +108,7 @@ class AdminClient(confluent_kafka.admin.AdminClient):
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
         domain: Optional[
-            Union[
-                Literal["gcn.nasa.gov"],
-                Literal["test.gcn.nasa.gov"],
-                Literal["dev.gcn.nasa.gov"],
-            ]
+            Literal["gcn.nasa.gov", "test.gcn.nasa.gov", "dev.gcn.nasa.gov"]
         ] = None,
         **kwargs,
     ):
