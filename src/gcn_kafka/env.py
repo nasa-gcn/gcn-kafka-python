@@ -2,7 +2,8 @@
 
 import os
 import re
-from typing import Mapping, Optional
+from collections.abc import Mapping
+from typing import Optional
 
 env_key_splitter = re.compile(r"_+")
 replacement_dict = {"_": ".", "__": "-", "___": "_"}
