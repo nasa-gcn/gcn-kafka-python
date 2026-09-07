@@ -3,7 +3,6 @@
 import os
 import re
 from collections.abc import Mapping
-from typing import Optional
 
 env_key_splitter = re.compile(r"_+")
 replacement_dict = {"_": ".", "__": "-", "___": "_"}
@@ -15,7 +14,7 @@ def replacement(match: re.Match) -> str:
 
 
 def config_from_env(
-    env: Optional[Mapping[str, str]] = None, prefix: str = "KAFKA_"
+    env: Mapping[str, str] | None = None, prefix: str = "KAFKA_"
 ) -> Mapping[str, str]:
     """Construct a Kafka client configuration dictionary from env variables.
     This uses the same rules as
